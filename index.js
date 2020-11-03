@@ -23,28 +23,35 @@ async function run() {
 
         console.log(`Sending Webhook for ${crashtestWebhook}`);
 
-        axios
-            .post(`${apiEndpoint}/${crashtestWebhook}`)
+        const response = await axios.post(`${apiEndpoint}/${crashtestWebhook}`);
+        const data = await response.json();
+
+        console.log(data);
+
+        /*
             .then(res => {
                 const scanId = res.data.data.scanId
                 console.log(`scanId: ${res.data.data.scanId}`)
+
+                if (scanId == undefined) {
+                    core.setFailed(`Could not start Scan for Webhook ${crashtestWebhook}.`);
+                } else {
+                    console.log(`Started Scan for Webhook ${crashtestWebhook}. Scan ID is ${scanId}.`)
+
+                    if (pullReport == 'false') {
+                        console.log("Skipping the download of the scan report.");
+                    } else {
+
+                        
+                    }
+
+                }
             })
             .catch(error => {
                 core.setFailed(error.message);
-                return
             })
 
-        if (scanId != undefined) {
-            console.log(`Started Scan for Webhook ${crashtestWebhook}. Scan ID is ${scanId}.`)
-        } else {
-            core.setFailed(`Could not start Scan for Webhook ${crashtestWebhook}.`);
-            return
-        }
 
-        if (pullRreport == 'false') {
-            console.log("Skipping the download of the scan report.");
-            return
-        }
 
         while (status <= 101) {
             console.log(`Scan Status currently is ${status} (101 = Running)`);
@@ -65,7 +72,7 @@ async function run() {
                 })
         }
 
-        console.log(`Scan finished with status ${status}.`)
+        console.log(`Scan finished with status ${status}.`)*/
 
     } catch (error) {
         core.setFailed(error.message);
