@@ -1,3 +1,4 @@
+const axios = require('axios')
 const core = require('@actions/core');
 const github = require('@actions/github');
 
@@ -12,6 +13,15 @@ try {
 
     console.log(`Sending Webhook for ${crashtestWebhook}`);
 
+    axios
+        .post(`${apiEndpoint}/${crashtestWebhook}`, {})
+        .then(res => {
+            console.log(`scanId: ${res.data.scanID}`)
+            console.log(res)
+        })
+        .catch(error => {
+            console.error(error)
+        })
 
     if (pullRreport == 'true') {
         console.log("Waiting for the scan to finish in order to download the report.")
