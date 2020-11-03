@@ -23,9 +23,13 @@ async function run() {
 
         console.log(`Sending Webhook for ${crashtestWebhook}`);
 
-        const data = await axios.post(`${apiEndpoint}/${crashtestWebhook}`);
+        try {
+            const data = await axios.post(`${apiEndpoint}/${crashtestWebhook}`);
+            console.log(data);
 
-        console.log(data);
+        } catch(error) {
+            console.log(error);
+        }
 
         /*
             .then(res => {
