@@ -7,7 +7,7 @@ try {
     const apiEndpoint = 'https://api.crashtest.cloud/webhook';
 
     // Load Configuration
-    const crashtestWebhook = core.getInput('crashtest-webhok');
+    const crashtestWebhook = core.getInput('crashtest-webhook');
     const pullRreport = core.getInput('pull-report');
 
     console.log(`Sending Webhook for ${crashtestWebhook}`);
