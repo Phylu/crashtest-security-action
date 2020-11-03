@@ -23,8 +23,7 @@ async function run() {
 
         console.log(`Sending Webhook for ${crashtestWebhook}`);
 
-        const response = await axios.post(`${apiEndpoint}/${crashtestWebhook}`);
-        const data = await response.json();
+        const data = await axios.post(`${apiEndpoint}/${crashtestWebhook}`);
 
         console.log(data);
 
