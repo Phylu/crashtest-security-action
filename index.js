@@ -14,7 +14,7 @@ try {
     console.log(`Sending Webhook for ${crashtestWebhook}`);
 
     axios
-        .post(`${apiEndpoint}/${crashtestWebhook}`, {})
+        .post(`${apiEndpoint}/${crashtestWebhook}`)
         .then(res => {
             console.log(`scanId: ${res.data.scanID}`)
             console.log(res)
