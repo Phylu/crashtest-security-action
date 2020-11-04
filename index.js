@@ -1,5 +1,6 @@
 const axios = require('axios')
 const core = require('@actions/core');
+const fs = require('fs');
 
 const wait = function (milliseconds) {
     return new Promise((resolve) => {
@@ -41,7 +42,7 @@ async function run() {
         console.log(`Started Scan for Webhook ${crashtestWebhook}. Scan ID is ${scanId}.`)
 
         if (pullReport == 'false') {
-            console.log("Skipping the download of the scan report.");
+            console.log(`Skipping the download of the scan report as pull-report='${pullReport}'.`);
             return
         }
 
@@ -64,6 +65,20 @@ async function run() {
         }
 
         console.log(`Scan finished with status ${status}.`)
+
+        try {
+            response = await axios.get(`${apiEndpoint}/${crashtestWebhook}/scans/${scanId}/report/junit`)
+        } catch(error) {
+            errorMsg = error.response.data.message
+            core.setFailed(`Retreiving Scan Status failed for Webhook ${crashtestWebhook}. Reason: ${errorMsg}.`);
+            return
+        }
+        fs.writeFile('report.xml', response.data, function(error) {
+            core.setFailed(`Could not write report file. Reason: ${error.message}`);
+            return
+        });
+        
+        console.log('Downloaded Report to report.xml');
 
     } catch (error) {
         core.setFailed(error.message);
