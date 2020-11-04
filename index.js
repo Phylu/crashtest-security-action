@@ -55,7 +55,7 @@ async function run() {
             // Refresh status
             try {
                 const response = await axios.get(`${apiEndpoint}/${crashtestWebhook}/scans/${scanId}/status`);
-                console.log(response);
+                console.log(response.data);
                 status = response.data.data.status.status_code;
             } catch(error) {
                 errorMsg = error.response.data.message
