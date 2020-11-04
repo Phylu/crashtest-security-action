@@ -68,7 +68,8 @@ async function run() {
 
         try {
             const response = await axios.get(`${apiEndpoint}/${crashtestWebhook}/scans/${scanId}/report/junit`)
-            fs.writeFile('report.xml', response.data);
+            console.log(response);
+            //fs.writeFile('report.xml', response.data);
         } catch(error) {
             errorMsg = error.response.data.message
             core.setFailed(`Downloading Report failed for Webhook ${crashtestWebhook}. Reason: ${errorMsg}.`);
@@ -78,7 +79,7 @@ async function run() {
         console.log('Downloaded Report to report.xml');
 
     } catch (error) {
-        core.setFailed(error.message);
+        core.setFailed(error);
         return
     }
 }
