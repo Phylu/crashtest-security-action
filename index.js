@@ -16,7 +16,7 @@ async function run() {
 
         // Setup general variables
         const apiEndpoint = 'https://api.crashtest.cloud/webhook';
-        const status = 100; // 100 = Queued
+        let status = 100; // 100 = Queued
         let scanId = undefined;
 
         // Load Configuration
@@ -55,7 +55,7 @@ async function run() {
             // Refresh status
             try {
                 const response = await axios.get(`${apiEndpoint}/${crashtestWebhook}/scans/${scanId}/status`);
-                console.log(response.data.data);
+                console.log(response.data.data.status.status_code);
                 status = 200;
                 //status = response.data.data.status.status_code;
             } catch(error) {
@@ -84,7 +84,7 @@ async function run() {
         console.log('Downloaded Report to report.xml');
 
     } catch (error) {
-        core.setFailed(error.message);
+        core.setFailed(error);
         return
     }
 }
