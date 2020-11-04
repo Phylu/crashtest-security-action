@@ -32,7 +32,7 @@ async function run() {
             return
         }
 
-        if (!scanID) {
+        if (!scanId) {
             core.setFailed(`Could not start Scan for Webhook ${crashtestWebhook}.`);
             return
         }
