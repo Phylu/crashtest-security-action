@@ -55,9 +55,11 @@ async function run() {
             // Refresh status
             try {
                 const response = await axios.get(`${apiEndpoint}/${crashtestWebhook}/scans/${scanId}/status`);
-                console.log(response.data);
-                status = response.data.data.status.status_code;
+                console.log(response.data.data);
+                status = 200;
+                //status = response.data.data.status.status_code;
             } catch(error) {
+                console.log(error)
                 errorMsg = error.response.data.message
                 core.setFailed(`Retreiving Scan Status failed for Webhook ${crashtestWebhook}. Reason: ${errorMsg}.`);
                 return
