@@ -25,6 +25,7 @@ async function run() {
 
         console.log(`Sending Webhook for ${crashtestWebhook}`);
 
+        // Start the Security Scan
         try {
             const response = await axios.post(`${apiEndpoint}/${crashtestWebhook}`);
             scanId = response.data.data.scanId;
@@ -34,6 +35,7 @@ async function run() {
             return
         }
 
+        // Check if the scan was correctly started
         if (!scanId) {
             core.setFailed(`Could not start Scan for Webhook ${crashtestWebhook}.`);
             return
@@ -41,11 +43,13 @@ async function run() {
 
         console.log(`Started Scan for Webhook ${crashtestWebhook}. Scan ID is ${scanId}.`)
 
+        // Check if the action should wait for the report and download it
         if (pullReport == 'false') {
             console.log(`Skipping the download of the scan report as pull-report='${pullReport}'.`);
             return
         }
 
+        // Wait until the scan has finished
         while (status <= 101) {
             console.log(`Scan Status currently is ${status} (101 = Running)`);
 
@@ -66,6 +70,7 @@ async function run() {
 
         console.log(`Scan finished with status ${status}.`)
 
+        // Download the JUnit Report
         let junitReport = undefined;
         try {
             const response = await axios.get(`${apiEndpoint}/${crashtestWebhook}/scans/${scanId}/report/junit`)
@@ -85,7 +90,7 @@ async function run() {
         console.log('Downloaded Report to report.xml');
 
     } catch (error) {
-        core.setFailed(error);
+        core.setFailed(error.message);
         return
     }
 }
