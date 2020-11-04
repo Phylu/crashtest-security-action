@@ -16,6 +16,7 @@ async function run() {
         // Setup general variables
         const apiEndpoint = 'https://api.crashtest.cloud/webhook';
         const status = 100; // 100 = Queued
+        let scanId = undefined;
 
         // Load Configuration
         const crashtestWebhook = core.getInput('crashtest-webhook');
@@ -25,10 +26,10 @@ async function run() {
 
         try {
             const response = await axios.post(`${apiEndpoint}/${crashtestWebhook}`);
-            const scanId = response.data.data.scanId;
+            scanId = response.data.data.scanId;
         } catch(error) {
             errorMsg = error.response.data.message
-            core.setFailed(`Could not start Scan for Webhook ${crashtestWebhook}. Reason: ${errorMgs}.`);
+            core.setFailed(`Could not start Scan for Webhook ${crashtestWebhook}. Reason: ${errorMsg}.`);
             return
         }
 
@@ -56,7 +57,7 @@ async function run() {
                 status = response.data.data.status.status_code;
             } catch(error) {
                 errorMsg = error.response.data.message
-                core.setFailed(`Retreiving Scan Status failed for Webhook ${crashtestWebhook}. Reason: ${errorMgs}.`);
+                core.setFailed(`Retreiving Scan Status failed for Webhook ${crashtestWebhook}. Reason: ${errorMsg}.`);
                 return
             }
 
