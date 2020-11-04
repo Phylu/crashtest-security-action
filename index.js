@@ -54,7 +54,8 @@ async function run() {
 
             // Refresh status
             try {
-                response = await axios.get(`${apiEndpoint}/${crashtestWebhook}/scans/${scanId}/status`);
+                const response = await axios.get(`${apiEndpoint}/${crashtestWebhook}/scans/${scanId}/status`);
+                console.log(response);
                 status = response.data.data.status.status_code;
             } catch(error) {
                 errorMsg = error.response.data.message
@@ -67,16 +68,16 @@ async function run() {
         console.log(`Scan finished with status ${status}.`)
 
         try {
-            response = await axios.get(`${apiEndpoint}/${crashtestWebhook}/scans/${scanId}/report/junit`)
+            const response = await axios.get(`${apiEndpoint}/${crashtestWebhook}/scans/${scanId}/report/junit`)
+            fs.writeFile('report.xml', response.data, function(error) {
+                core.setFailed(`Could not write report file. Reason: ${error.message}`);
+                return
+            });
         } catch(error) {
             errorMsg = error.response.data.message
-            core.setFailed(`Retreiving Scan Status failed for Webhook ${crashtestWebhook}. Reason: ${errorMsg}.`);
+            core.setFailed(`Downloading Report failed for Webhook ${crashtestWebhook}. Reason: ${errorMsg}.`);
             return
         }
-        fs.writeFile('report.xml', response.data, function(error) {
-            core.setFailed(`Could not write report file. Reason: ${error.message}`);
-            return
-        });
         
         console.log('Downloaded Report to report.xml');
 
