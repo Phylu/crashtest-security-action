@@ -66,15 +66,21 @@ async function run() {
 
         console.log(`Scan finished with status ${status}.`)
 
+        let junitReport = undefined;
         try {
             const response = await axios.get(`${apiEndpoint}/${crashtestWebhook}/scans/${scanId}/report/junit`)
-            console.log(response);
-            //fs.writeFile('report.xml', response.data);
+            junitReport = response.data;
         } catch(error) {
             errorMsg = error.response.data.message
             core.setFailed(`Downloading Report failed for Webhook ${crashtestWebhook}. Reason: ${errorMsg}.`);
             return
         }
+
+        fs.writeFile('report.xml', junitReport, function(error) {
+            if (error) {
+                core.setFailed(`Writing the Report failed for Webhook ${crashtestWebhook}. Reason: ${error}`);
+            }
+        });
         
         console.log('Downloaded Report to report.xml');
 
